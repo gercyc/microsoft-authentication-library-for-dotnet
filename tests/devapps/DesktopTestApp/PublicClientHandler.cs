@@ -64,7 +64,6 @@ namespace DesktopTestApp
                     .AcquireTokenInteractive(scopes)
                     .WithAccount(CurrentUser)
                     .WithPrompt(uiBehavior)
-                    .WithUseEmbeddedWebView(false)
                     .WithExtraQueryParameters(extraQueryParams)
                     .ExecuteAsync(CancellationToken.None)
                     .ConfigureAwait(false);
@@ -74,7 +73,6 @@ namespace DesktopTestApp
                 result = await PublicClientApplication
                     .AcquireTokenInteractive(scopes)
                     .WithLoginHint(LoginHint)
-                    .WithUseEmbeddedWebView(false)
                     .WithPrompt(uiBehavior)
                     .WithExtraQueryParameters(extraQueryParams)
                     .ExecuteAsync(CancellationToken.None)
@@ -159,6 +157,7 @@ namespace DesktopTestApp
         {
             var builder = PublicClientApplicationBuilder
                 .Create(ApplicationId)
+                .WithDesktopFeatures()
                 .WithTenantId(TenantId)
                 .WithRedirectUri(RedirectUri)
                 .WithClientName(_clientName);
