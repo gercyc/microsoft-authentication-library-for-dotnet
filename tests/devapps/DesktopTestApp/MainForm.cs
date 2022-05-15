@@ -24,7 +24,8 @@ namespace DesktopTestApp
 {
     public partial class MainForm : Form
     {
-        private const string PublicClientId = "6afec070-b576-4a2f-8d95-41f317b28e06";
+        private const string TenantId = "c5f9c259-c9e3-4b7e-be07-41536b1b843c";
+        private const string PublicClientId = "e3a243fd-ee77-496b-8647-78c45294fb24";
         private string _b2CClientId = "e3b9ad76-9763-4827-b088-80c7a7888f79";
         public const string B2CCustomDomainClientId = "64a88201-6bbd-49f5-ab46-9153798493fd ";
 
@@ -54,7 +55,7 @@ namespace DesktopTestApp
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            _publicClientHandler = new PublicClientHandler(PublicClientId, LogDelegate);
+            _publicClientHandler = new PublicClientHandler(TenantId, PublicClientId, LogDelegate);
             LoadSettings();
         }
 
@@ -722,7 +723,7 @@ namespace DesktopTestApp
                 CreateException(exc);
             }
         }
-        
+
         private async Task GetB2CClientIdFromLabAsync()
         {
             if (_b2CClientId != null)

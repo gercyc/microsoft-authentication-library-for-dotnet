@@ -97,7 +97,7 @@ namespace Microsoft.Identity.Client.Instance
                         return CreateAuthority(requestAuthorityInfo);
                     }
 
-                    var requestAuthority = updateEnvironment ? 
+                    var requestAuthority = updateEnvironment ?
                         new AadAuthority(CreateAuthorityWithEnvironment(requestAuthorityInfo, account?.Environment).AuthorityInfo) :
                         new AadAuthority(requestAuthorityInfo);
                     if (!requestAuthority.IsCommonOrganizationsOrConsumersTenant())
@@ -108,6 +108,9 @@ namespace Microsoft.Identity.Client.Instance
                     return updateEnvironment ?
                             CreateAuthorityWithTenant(CreateAuthorityWithEnvironment(configAuthorityInfo, account.Environment).AuthorityInfo, account?.HomeAccountId?.TenantId) :
                             CreateAuthorityWithTenant(configAuthorityInfo, account?.HomeAccountId?.TenantId);
+                
+                case AuthorityType.PingId:
+                    return new PingidAuthority(nonNullAuthInfo);
 
                 default:
                     throw new MsalClientException(
@@ -150,6 +153,9 @@ namespace Microsoft.Identity.Client.Instance
 
                 case AuthorityType.Dsts:
                     return new DstsAuthority(authorityInfo);
+
+                case AuthorityType.PingId:
+                    return new PingidAuthority(authorityInfo);
 
                 default:
                     throw new MsalClientException(
@@ -204,7 +210,7 @@ namespace Microsoft.Identity.Client.Instance
         {
             var configAuthorityInfo = requestContext.ServiceBundle.Config.Authority.AuthorityInfo;
 
-            if (!requestContext.ServiceBundle.Config.MultiCloudSupportEnabled && 
+            if (!requestContext.ServiceBundle.Config.MultiCloudSupportEnabled &&
                 requestAuthorityInfo != null &&
                 !string.Equals(requestAuthorityInfo.Host, configAuthorityInfo.Host, StringComparison.OrdinalIgnoreCase))
             {

@@ -79,12 +79,20 @@ namespace Microsoft.Identity.Client.Instance.Discovery
                 PreferredCache = "login.windows-ppe.net"
             };
 
+            InstanceDiscoveryMetadataEntry pingIdEntry = new InstanceDiscoveryMetadataEntry()
+            {
+                Aliases = new[] { "auth.pingone.com" },
+                PreferredNetwork = "auth.pingone.com",
+                PreferredCache = "auth.pingone.com"
+            };
+
             AddToKnownCache(publicCloudEntry);
             AddToKnownCache(cloudEntryChina);
             AddToKnownCache(cloudEntryGermanay);
             AddToKnownCache(usGovCloudEntry);
             AddToKnownCache(usCloudEntry);
             AddToKnownCache(ppeCloudEntry);
+            AddToKnownCache(pingIdEntry);
             AddToPublicEnvironment(publicCloudEntry);
         }
 

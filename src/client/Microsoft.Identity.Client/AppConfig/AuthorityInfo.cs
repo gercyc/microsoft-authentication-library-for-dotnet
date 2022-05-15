@@ -34,7 +34,7 @@ namespace Microsoft.Identity.Client
                 case AuthorityType.B2C:
                     var authorityUri = new Uri(authority);
                     string[] pathSegments = GetPathSegments(authorityUri.AbsolutePath);
-                        
+
                     if (pathSegments.Length < 3)
                     {
                         throw new ArgumentException(MsalErrorMessage.B2cAuthorityUriInvalidPath);
@@ -51,7 +51,7 @@ namespace Microsoft.Identity.Client
                 case AuthorityType.Dsts:
                     authorityUri = new Uri(authority);
                     pathSegments = GetPathSegments(authorityUri.AbsolutePath);
-                    
+
                     if (pathSegments.Length < 2)
                     {
                         throw new ArgumentException(MsalErrorMessage.DstsAuthorityUriInvalidPath);
@@ -122,6 +122,22 @@ namespace Microsoft.Identity.Client
 
         #region Builders
         internal static AuthorityInfo FromAuthorityUri(string authorityUri, bool validateAuthority)
+        {
+            string canonicalUri = CanonicalizeAuthorityUri(authorityUri);
+            ValidateAuthorityUri(canonicalUri);
+
+            var authorityType = GetAuthorityType(canonicalUri);
+
+            // If the authority type is B2C, validateAuthority must be false.
+            if (authorityType == AuthorityType.B2C)
+            {
+                validateAuthority = false;
+            }
+
+            return new AuthorityInfo(authorityType, canonicalUri, validateAuthority);
+        }
+
+        internal static AuthorityInfo FromAuthorityUri(string authorityUri, bool validateAuthority, string environmentId)
         {
             string canonicalUri = CanonicalizeAuthorityUri(authorityUri);
             ValidateAuthorityUri(canonicalUri);
@@ -314,7 +330,16 @@ namespace Microsoft.Identity.Client
 
             return string.Format(CultureInfo.InvariantCulture, "{0}/{1}", cloudUrl, tenantValue);
         }
+        internal static string GetAuthorityFromUrl(string authority)
+        {
+            var uri = new Uri(authority);
+            if (uri.Authority != null)
+            {
+                return uri.Authority;
+            }
 
+            throw new InvalidOperationException(MsalErrorMessage.AuthorityUriInvalidPath);
+        }
         internal static string GetFirstPathSegment(string authority)
         {
             var uri = new Uri(authority);
@@ -339,9 +364,10 @@ namespace Microsoft.Identity.Client
             throw new InvalidOperationException(MsalErrorMessage.DstsAuthorityDoesNotHaveThreeSegments);
         }
 
-        private static AuthorityType GetAuthorityType(string authority) 
+        private static AuthorityType GetAuthorityType(string authority)
         {
             string firstPathSegment = GetFirstPathSegment(authority);
+            string authorityUrl = GetAuthorityFromUrl(authority);
 
             if (string.Equals(firstPathSegment, "adfs", StringComparison.OrdinalIgnoreCase))
             {
@@ -358,7 +384,12 @@ namespace Microsoft.Identity.Client
                 return AuthorityType.B2C;
             }
 
+            if (string.Equals(authorityUrl, PingidAuthority.DefaultTrustedHost, StringComparison.OrdinalIgnoreCase))
+            {
+                return AuthorityType.PingId;
+            }
+
             return AuthorityType.Aad;
-        }      
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Desktop;
 
 namespace DesktopTestApp
 {
@@ -24,8 +25,24 @@ namespace DesktopTestApp
 
             CreateOrUpdatePublicClientApp(InteractiveAuthority, ApplicationId);
         }
+        public PublicClientHandler(string tenantId, string clientId, LogCallback logCallback)
+        {
+            ApplicationId = clientId;
+            TenantId = tenantId;
+            RedirectUri = "http://localhost:8059";
+            PublicClientApplication = PublicClientApplicationBuilder.Create(ApplicationId)
+                .WithTenantId(tenantId)
+                .WithDesktopFeatures()
+                .WithClientName(_clientName)
+                .WithRedirectUri(RedirectUri)
+                .WithLogging(logCallback, LogLevel.Verbose, true)
+                .BuildConcrete();
 
+            CreateOrUpdatePublicClientApp(InteractiveAuthority, ApplicationId);
+        }
         public string ApplicationId { get; set; }
+        public string TenantId { get; set; }
+        public string RedirectUri { get; set; }
         public string InteractiveAuthority { get; set; }
         public string AuthorityOverride { get; set; }
         public string ExtraQueryParams { get; set; }
@@ -47,6 +64,7 @@ namespace DesktopTestApp
                     .AcquireTokenInteractive(scopes)
                     .WithAccount(CurrentUser)
                     .WithPrompt(uiBehavior)
+                    .WithUseEmbeddedWebView(false)
                     .WithExtraQueryParameters(extraQueryParams)
                     .ExecuteAsync(CancellationToken.None)
                     .ConfigureAwait(false);
@@ -56,6 +74,7 @@ namespace DesktopTestApp
                 result = await PublicClientApplication
                     .AcquireTokenInteractive(scopes)
                     .WithLoginHint(LoginHint)
+                    .WithUseEmbeddedWebView(false)
                     .WithPrompt(uiBehavior)
                     .WithExtraQueryParameters(extraQueryParams)
                     .ExecuteAsync(CancellationToken.None)
@@ -140,6 +159,8 @@ namespace DesktopTestApp
         {
             var builder = PublicClientApplicationBuilder
                 .Create(ApplicationId)
+                .WithTenantId(TenantId)
+                .WithRedirectUri(RedirectUri)
                 .WithClientName(_clientName);
 
             if (!string.IsNullOrWhiteSpace(interactiveAuthority))

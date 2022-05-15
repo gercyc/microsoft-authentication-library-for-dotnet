@@ -19,6 +19,8 @@ namespace Microsoft.Identity.Client.Instance.Validation
                 case AuthorityType.B2C:
                 case AuthorityType.Dsts:
                     return new NullAuthorityValidator();
+                case AuthorityType.PingId:
+                    return new AadAuthorityValidator(requestContext);
                 default:
                     throw new InvalidOperationException("Invalid AuthorityType");
             }

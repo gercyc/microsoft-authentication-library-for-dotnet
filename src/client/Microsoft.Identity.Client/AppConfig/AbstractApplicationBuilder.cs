@@ -615,6 +615,24 @@ namespace Microsoft.Identity.Client
         }
 
         /// <summary>
+        /// Add PingId/PingFederate Authority
+        /// </summary>
+        /// <param name="authorityUri"></param>
+        /// <param name="environmentId"></param>
+        /// <param name="validateAuthority"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public T WithPingIdAuthority(Uri authorityUri, bool validateAuthority = true)
+        {
+            if (authorityUri == null)
+            {
+                throw new ArgumentNullException(nameof(authorityUri));
+            }
+
+            return WithAuthority(authorityUri.ToString(), validateAuthority);
+        }
+
+        /// <summary>
         /// Adds a known Azure AD authority to the application to sign-in users specifying
         /// the full authority Uri. See https://aka.ms/msal-net-application-configuration.
         /// </summary>

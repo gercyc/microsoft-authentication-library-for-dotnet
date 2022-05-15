@@ -45,6 +45,8 @@ namespace Microsoft.Identity.Client
         /// <remarks>More details at https://aka.ms/msal-net-prompt-create. </remarks>
         public static readonly Prompt Create = new Prompt("create");
 
+        public static readonly Prompt None = new Prompt("none");
+
 #if DESKTOP || WINDOWS_APP
         /// <summary>
         /// Only available on .NET platform. AcquireToken will send <c>prompt=attempt_none</c> to
