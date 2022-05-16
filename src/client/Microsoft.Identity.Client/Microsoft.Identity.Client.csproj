@@ -144,6 +144,7 @@
     <Compile Remove="GlobalSuppressions3.cs" />
     <Compile Include="AppConfig\AppTokenProviderParameters.cs" />
     <Compile Include="Instance\PingidAuthority.cs" />
+    <Compile Include="Instance\PingidSamlAuthority.cs" />
     <EmbeddedResource Include="$(PathToMsalSources)\Properties\Microsoft.Identity.Client.rd.xml" />
   </ItemGroup>
 
@@ -298,6 +299,10 @@
 
   <ItemGroup>
     <None Remove="Instance\PingidAuthority.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Instance\PingidSamlAuthority.cs" />
   </ItemGroup>
 
 

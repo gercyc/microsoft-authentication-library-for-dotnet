@@ -384,9 +384,14 @@ namespace Microsoft.Identity.Client
                 return AuthorityType.B2C;
             }
 
-            if (string.Equals(authorityUrl, PingidAuthority.DefaultTrustedHost, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(authorityUrl, PingidAuthority.DefaultTrustedHost, StringComparison.OrdinalIgnoreCase) && !authority.Contains("saml2"))
             {
                 return AuthorityType.PingId;
+            }
+
+            if (string.Equals(authorityUrl, PingidSamlAuthority.DefaultTrustedHost, StringComparison.OrdinalIgnoreCase) && authority.Contains("saml2"))
+            {
+                return AuthorityType.PingIdSaml;
             }
 
             return AuthorityType.Aad;

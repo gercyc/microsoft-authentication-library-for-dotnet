@@ -16,6 +16,8 @@ namespace Microsoft.Identity.Client
 
         Dsts,
 
-        PingId
+        PingId,
+
+        PingIdSaml
     }
 }

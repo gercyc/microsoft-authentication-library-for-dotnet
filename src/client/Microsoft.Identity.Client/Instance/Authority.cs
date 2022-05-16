@@ -112,6 +112,9 @@ namespace Microsoft.Identity.Client.Instance
                 case AuthorityType.PingId:
                     return new PingidAuthority(nonNullAuthInfo);
 
+                case AuthorityType.PingIdSaml:
+                    return new PingidSamlAuthority(nonNullAuthInfo);
+
                 default:
                     throw new MsalClientException(
                         MsalError.InvalidAuthorityType,
@@ -156,6 +159,9 @@ namespace Microsoft.Identity.Client.Instance
 
                 case AuthorityType.PingId:
                     return new PingidAuthority(authorityInfo);
+
+                case AuthorityType.PingIdSaml:
+                    return new PingidSamlAuthority(authorityInfo);
 
                 default:
                     throw new MsalClientException(

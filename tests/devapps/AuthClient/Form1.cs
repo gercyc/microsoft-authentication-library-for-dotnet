@@ -16,6 +16,7 @@ namespace AuthClient
     public partial class Form1 : Form
     {
         private IPublicClientApplication _client;
+        private IConfidentialClientApplication _confidentialClient;
         private IAccount _account;
         public Form1()
         {
@@ -26,20 +27,38 @@ namespace AuthClient
         {
             try
             {
-                string clientId = "e3a243fd-ee77-496b-8647-78c45294fb24";
+                string clientId = "f498bff5-d99a-43e6-8c80-17804b326300";
                 string environmentId = "c5f9c259-c9e3-4b7e-be07-41536b1b843c";
+
+                //_confidentialClient = ConfidentialClientApplicationBuilder
+                //    .Create(clientId)
+                //    .WithClientAssertion(clientId)
+                //    .WithTenantId(environmentId)
+                //    .WithAuthority("https://auth.pingone.com/c5f9c259-c9e3-4b7e-be07-41536b1b843c/saml20/idp/sso", false)
+                //    .WithRedirectUri("http://localhost:9502/Comply")
+                //    .Build();
+
+                //var auth = await _confidentialClient
+                //    .AcquireTokenForClient(new string[] { "profile" })
+                //    //.AcquireTokenByAuthorizationCode(new string[] { "profile" }, "ComplySaml")
+                //    .ExecuteAsync()
+                //    .ConfigureAwait(true);
+
                 _client = PublicClientApplicationBuilder.Create(clientId)
                     .WithTenantId(environmentId)
                     .WithDesktopFeatures()
-                    .WithPingIdAuthority(new Uri("https://auth.pingone.com/c5f9c259-c9e3-4b7e-be07-41536b1b843c/as/authorize"), false)
+                    .WithPingIdAuthority(new Uri("https://auth.pingone.com/c5f9c259-c9e3-4b7e-be07-41536b1b843c/saml20/idp/startsso?spEntityId=ComplySaml"), false)
                     .WithRedirectUri("http://localhost:8059") //addin sonda teste
                     .Build();
 
-                var auth = await _client.AcquireTokenInteractive(new string[] { "profile" })
-                    .WithPrompt(Prompt.NoPrompt)
-                    .WithUseEmbeddedWebView(false)
-                    //.WithCustomWebUi(new CustomWebUi(this))
-                    .WithParentActivityOrWindow(this)
+                var auth = await _client
+                    //.AcquireTokenByIntegratedWindowsAuth(new string[] { "profile" })
+                    
+                    .AcquireTokenInteractive(new string[] { "profile" })
+
+                    //.WithPrompt(Prompt.NoPrompt)
+                    //.WithParentActivityOrWindow(this)
+
                     .ExecuteAsync()
                     .ConfigureAwait(true);
 

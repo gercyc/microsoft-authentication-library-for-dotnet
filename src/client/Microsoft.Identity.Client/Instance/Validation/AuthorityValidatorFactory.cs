@@ -21,6 +21,8 @@ namespace Microsoft.Identity.Client.Instance.Validation
                     return new NullAuthorityValidator();
                 case AuthorityType.PingId:
                     return new AadAuthorityValidator(requestContext);
+                case AuthorityType.PingIdSaml:
+                    return new AadAuthorityValidator(requestContext);
                 default:
                     throw new InvalidOperationException("Invalid AuthorityType");
             }
